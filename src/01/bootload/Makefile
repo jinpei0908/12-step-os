@@ -17,7 +17,7 @@ H8WRITE = ../../tools/h8write/h8write
 
 H8WRITE_SERDEV = /dev/cu.usbserial-FTS8PC7G
 
-OBJS = vector.o startup.o main.o
+OBJS = vector.o startup.o intr.o main.o interrupt.o
 OBJS += lib.o serial.o xmodem.o elf.o
 
 TARGET = kzload
@@ -31,6 +31,7 @@ LFLAGS = -static -T ld.scr -L.
 
 .SUFFIXES: .c .o
 .SUFFIXES: .s .o
+.SUFFIXES: .S .o
 
 all: $(TARGET)
 
@@ -45,6 +46,9 @@ $(TARGET): $(OBJS)
 .s.o: $<
 	$(CC) -c $(CFLAGS) $<
 
+.S.o: $<
+	$(CC) -c $(CFLAGS) $<
+
 $(TARGET).mot: $(TARGET)
 	$(OBJCOPY) -O srec $(TARGET) $(TARGET).mot
 
@@ -52,9 +56,6 @@ image: $(TARGET).mot
 
 write: $(TARGET).mot
 	$(H8WRITE) -3069 -f20 $(TARGET).mot $(H8WRITE_SERDEV)
-
-connect:
-	sudo cu -l $(H8WRITE_SERDEV)
 
 clean:
 	rm -f $(OBJS) $(TARGET) $(TARGET).elf $(TARGET).mot

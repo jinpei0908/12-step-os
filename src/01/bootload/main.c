@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "interrupt.h"
 #include "lib.h"
 #include "serial.h"
 #include "xmodem.h"
@@ -13,6 +14,9 @@ static int init(void) {
    */
   memcpy(&data_start, &erodata, (long)&edata - (long)&data_start);
   memset(&bss_start, 0, (long)&ebss - (long)&bss_start);
+
+  /* ソフトウェア割り込みベクタを初期化する */
+  softvec_init();
 
   /* シリアルの初期化 */
   serial_init(SERIAL_DEFAULT_DEVICE);
@@ -60,6 +64,9 @@ int main(void) {
   extern int buffer_start; /* リンカスクリプトで定義されているバッファ */
   char *entry_point;
   void (*f)(void);
+
+  /* 割り込みを無効にする */
+  INTR_DISABLE;
 
   init();
   func(1, 2);
