@@ -1,3 +1,6 @@
 tools
-src/01/bootload/kzload*
-src/01/bootload/*.o
+kzload
+kozos
+*.o
+*.elf
+*.mot
