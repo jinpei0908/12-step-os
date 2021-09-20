@@ -3,10 +3,10 @@
 #include "kozos.h"
 #include "lib.h"
 
-/* システムタスクとユーザスレッドの起動 */
+/* システムタスクとユーザタスクの起動 */
 static int start_threads(int argc, char *argv[]) {
-  kz_run(test11_1_main, "test_11_1", 1, 0x100, 0, NULL);
-  kz_run(test11_2_main, "test_11_2", 2, 0x100, 0, NULL);
+  kz_run(consdrv_main, "consdrv", 1, 0x200, 0, NULL);
+  kz_run(command_main, "command", 8, 0x200, 0, NULL);
 
   kz_chpri(15); /* 優先順位を下げてアイドルスレッドに移行する */
   INTR_ENABLE;
